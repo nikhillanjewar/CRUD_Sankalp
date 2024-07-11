@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee List</title>
+</head>
+<body>
+    <h1>Employee List</h1>
+    <ul id="employee-list">
+    </ul>
+
+    <form id="create-employee-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="salary">Salary:</label>
+        <input type="number" id="salary" name="salary"><br><br>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age"><br><br>
+        <input type="submit" value="Create Employee">
+    </form>
+
+    <script>
+        fetch('/api/employees')
+           .then(response => response.json())
+           .then(employees => {
+                const employeeList = document.getElementById('employee-list');
+                employees.forEach(employee => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `ID: ${employee.id}, Name: ${employee.name}, Salary: ${employee.salary}, Age: ${employee.age}`;
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.onclick = () => {
+                        // implement edit functionality
+                    };
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = () => {
+                        // implement delete functionality
+                    };
+                    listItem.appendChild(editButton);
+                    listItem.appendChild(deleteButton);
+                    employeeList.appendChild(listItem);
+                });
+            });
+
+        const createEmployeeForm = document.getElementById('create-employee-form');
+        createEmployeeForm.onsubmit = (event) => {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const salary = document.getElementById('salary').value;
+            const age = document.getElementById('age').value;
+            fetch('/api/employees', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, salary, age })
+            })
+           .then(response => response.json())
+           .then(employee => {
+                // add new employee to the list
+            });
+        };
+    </script>
+</body>
+</html>
